@@ -3,15 +3,15 @@
 import urllib2
 from bs4 import BeautifulSoup as soup
 import json
-#import pymongo
-#from pymongo import  MongoClient
+
+from pymongo import  MongoClient
 import pandas as pd
 import openpyxl
 
 
-"""client = MongoClient()
-db = client['rma_capital']
-collection  = db['immobilier']"""
+client = MongoClient()
+db = client['ps5']
+collection  = db['voitures']
 
 
 headers = { 'User-Agent' : 'Mozilla/5.0' }
@@ -31,12 +31,31 @@ def consult_modele(lien):
 
         modele = page_soup.find_all("h2", {"class": "font-normal fs12 no-margin ln22"})[0].text
        # d = dat.split(":")[1]
-        modele =modele.strip()
+        modele =modele.split(":")[1]
         return modele
 
 
     except:
         return ""
+
+def consult_paragraphe(lien):
+    global headers
+
+    req = urllib2.Request(lien, None, headers)
+    html = urllib2.urlopen(req)
+    html = html.read()
+    page_soup = soup(html,"lxml")
+    try:
+
+        descriptif = page_soup.find("div", {"class": "span10"}).text
+       # d = dat.split(":")[1]
+        return descriptif
+
+
+    except:
+        return ""
+
+
 
 def consult_kilo(lien):
     global headers
@@ -49,7 +68,7 @@ def consult_kilo(lien):
 
         kilo = page_soup.find_all("h2", {"class": "font-normal fs12 no-margin ln22"})[1].text
        # d = dat.split(":")[1]
-        kilo =kilo.strip()
+        kilo =kilo.split(":")[1]
         return kilo
 
 
@@ -102,7 +121,7 @@ def consult_serie(lien):
 
         serie = page_soup.find_all("h2", {"class": "font-normal fs12 no-margin ln22"})[4].text
        # d = dat.split(":")[1]
-        serie =serie.strip()
+        serie =serie.split(":")[1]
         return serie
 
 
@@ -126,6 +145,25 @@ def consult_quartier(lien):
     except:
         return ""
 
+def consult_image(lien):
+    global headers
+
+    req = urllib2.Request(lien, None, headers)
+    html = urllib2.urlopen(req)
+    html = html.read()
+    page_soup = soup(html,"lxml")
+    try:
+
+        image = page_soup.find('div',{'class','item active'}).img['src']       # d = dat.split(":")[1]
+        return image
+
+
+    except:
+        return ""
+
+
+
+
 def consult_type(lien):
     global headers
 
@@ -145,7 +183,7 @@ def consult_type(lien):
         return ""
 
 
-for i in range(1 ,2000):
+for i in range(1 ,2):
 
     link = link0 + str(i)
     req = urllib2.Request(link, None, headers)
@@ -158,6 +196,7 @@ for i in range(1 ,2000):
             toDict = {}
             try :
                 titre = div.find('h2').text
+                #image = div.find('a')[0]
                 description = div.find('span',{'class':'item-info-extra fs14'}).text.strip()
                 description = ','.join([txt.strip() for txt in description.split('-')])
                 typepropriete = description.split(",")[0]
@@ -176,6 +215,11 @@ for i in range(1 ,2000):
                 toDict['serie']=consult_serie(lien)
                 toDict['quartier']=consult_quartier(lien)
                 toDict['type']=consult_type(lien)
+                toDict['titre'] = titre
+                toDict['descriptif'] = consult_paragraphe(lien)
+                toDict['image'] = consult_image(lien)
+
+
 
 
 
@@ -184,21 +228,45 @@ for i in range(1 ,2000):
 
                 lien = div.find('a').get('href')
 
-                jsonarray = json.dumps(toDict)
-                with open("auto.json", "a") as f:
-                    json.dump(toDict, f)
+                #jsonarray = json.dumps(toDict)
+                #with open("auto_avito.json", "a") as f:
+                    #json.dump(toDict, f)
+                collection.insert(toDict)
 
 
 
 
 
 
-                    #print toDict
+                print toDict
             except:
                 pass
 
-            print jsonarray
-            #with open("avito.json","a") as f:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            #print jsonarray
+            #with open("auto_avito.json","a") as f:
                    # json.dump(toDict,f)
                    # collection.insert(toDict)
                    # print toDict
@@ -206,6 +274,15 @@ for i in range(1 ,2000):
 
             #toDict.append(json.loads(line))
             #db.insert(toDict)
+
+
+
+
+
+
+
+
+
 #df = pd.DataFrame.from_records(L)
 #print df
 #writer = pd.ExcelWriter('auto.xlsx')
