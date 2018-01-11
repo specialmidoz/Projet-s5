@@ -1,0 +1,112 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Bootstrap 4 - Sign-in/sign-up Template">
+  <meta name="author" content="Kiai Joe">
+  <meta name="keyword" content="Bootstrap,Template,Open,Source,jQuery,CSS,HTML,HTML5,CSS3,Bootstrap4,Login">
+  <title>Login | Sign Up</title>
+  <link rel="icon" type="image/png" href="https://www.downtowncouncil.org/wp-content/uploads/2017/02/lock-open-blue.png">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+  <section class="login-box centered">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4 login-sec">
+          <ul id="tabsJustified" class="nav nav-tabs">
+            <li class="nav-item"><a href="" data-target="#signin" data-toggle="tab" class="nav-link active">Sign In</a></li>
+            <li class="nav-item"><a href="" data-target="#signup" data-toggle="tab" class="nav-link">Sign Up</a></li>
+          </ul>
+          <br>
+          <div id="tabsJustifiedContent" class="tab-content">
+            <div id="signin" class="tab-pane fade active show">
+              {{ error }}
+              <form class="login-form" action="/interfaceclient/loginuser/" method="post">
+                <div class="form-group">
+                  <label for="exampleInputEmail1" class="text-uppercase">Email</label>
+                    {% csrf_token %}
+                  <input type="email" class="form-control" name="email" placeholder="Email">
+                </div>
+                <div class="form-group">
+                  <label for="exampleInputPassword1" class="text-uppercase" >Password</label>
+                  <input type="password" class="form-control" placeholder="Password" name="password">
+                </div>
+
+                <div class="form-check">
+                  <label class="form-check-label">
+                    <input type="checkbox" class="form-check-input">
+                    <small>Remember Me</small>
+                  </label>
+                  <button type="submit" class="btn btn-login float-right" name="submit">Submit</button>
+                </div>
+              </form>
+            </div>
+            <div id="signup" class="tab-pane fade" >
+              <form class="login-form" action="/interfaceclient/registeruser/" method="POST">
+                                      {% csrf_token %}
+
+                <div class="form-group">
+                  <label for="exampleInputEmail1" class="text-uppercase">Full Name</label>
+                  <input type="text" class="form-control" name="fullname" placeholder="">
+                </div>
+                <div class="form-group">
+                  <label for="exampleInputPassword1" class="text-uppercase">Password</label>
+                  <input type="password" class="form-control" name="password" placeholder="">
+                </div>
+                <div class="form-group">
+                  <label for="exampleInputPassword1" class="text-uppercase">Confirm Password</label>
+                  <input type="password" class="form-control" name="confirmpassword" placeholder="">
+                </div>
+                <div class="form-group">
+                  <label for="exampleInputEmail1" class="text-uppercase">Email Address</label>
+                  <input type="email" class="form-control" name="email" placeholder="">
+                </div>
+                 <div class="form-group">
+                  <label for="exampleInputEmail1" class="text-uppercase">Ville</label>
+                  <input type="text" class="form-control" name="ville" placeholder="">
+                </div>
+                <div class="form-group">
+                  <label for="exampleInputEmail1" class="text-uppercase">Type Carburant souhaité</label>
+                  <input type="text" class="form-control" name="typecarburant" placeholder="">
+                </div>
+                <div class="form-group">
+                  <label for="exampleInputEmail1" class="text-uppercase">Modèle</label>
+                  <input type="text" class="form-control" name="modele" placeholder="">
+                </div>
+
+
+                <div class="form-check">
+                  <button type="submit" name="register" class="btn btn-login float-right">REGISTER</button>
+                </div>
+              </form>
+            </div>
+          </div>
+          <div class="copy-text">Created with <i class="fa fa-heart"></i> by <a href="https://www.linkedin.com/in/ezzat-mahmoud/">Mahmoudevs</a></div>
+        </div>
+        <div class="col-md-8 banner-sec">
+          <div class="carousel-caption d-none d-md-block">
+            <div class="banner-text">
+              <h2>This is Find my car Administration</h2>
+              <p>Retrieve your favorite car !</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js'></script>
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+</body>
+
+</html>
