@@ -91,32 +91,45 @@ def loginuser(request):
         if collection.find({'email':email,'password':password}).count() != 0:
             user =  collection.find_one({'email':request.POST['email']},{'_id': False})
             request.session['client'] = user
-            return redirect('/interfaceclient/vitrine',context)
+            return render(request,'vitrine.html',context)
         else:
             context['error']="Not found"
-            return render(request,'registeruser.html',context)
+            #todo modif
+            return redirect('www.facebook.com')
+
+        return render(request,'vitrine.html',context)
 
     else:
         return render(request, 'registeruser.html', context)
 
 
 def vitrine(request):
-    es = Elasticsearch()
-    voitures = es.search(index='projects5',doc_type='voitures',body={'size':10000})
-    #request.session.get('client')['ville']
-    voitures = voitures['hits']['hits']
-    # for voiture in voitures :
-    #     print voiture
-    voitures_recommended = es.search(index='projects5',doc_type='voitures',body={'size':10,"query": {
-    "bool": {
-      "should": [
-        { "match": { "ville":  request.session.get('client')['ville'] }},
+    return render(request, 'vitrine.html')
 
-        { "match": { "typecarburant": request.session.get('client')['typecarburant'] }}
-      ]
-    }
-  }})
-    voitures_recommended = voitures_recommended['hits']['hits']
-    for v in voitures_recommended :
-        print v
-    return render(request,'vitrine.html')
+    # try:
+    #     context = {}
+    #     client = request.session.get('client')
+    #     es = Elasticsearch()
+    #     voitures = es.search(index='projects5', doc_type='voitures', body={'size': 10})
+    #     # request.session.get('client')['ville']
+    #     voitures = voitures['hits']['hits']
+    #     context['voitures'] = voitures
+    #     # for voiture in voitures :
+    #     #     print voiture
+    #     voitures_recommended = es.search(index='projects5', doc_type='voitures', body={'size': 10, "query": {
+    #         "bool": {
+    #             "should": [
+    #                 {"match": {"ville": request.session.get('client')['ville']}},
+    #
+    #                 {"match": {"typecarburant": request.session.get('client')['typecarburant']}}
+    #             ]
+    #         }
+    #     }})
+    #     voitures_recommended = voitures_recommended['hits']['hits']
+    #     for v in voitures_recommended:
+    #         print v
+    #     return render(request, 'vitrine.html',context)
+    # except:
+    #     return redirect('/interfaceclient/registeruser')
+
+
